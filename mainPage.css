@@ -1,0 +1,7 @@
+#sizeInputSection, #bombInputSection {
+  width: 50%;
+}
+
+#sizeInputDescription, #bombInputDescription {
+  width: 15%;
+}
