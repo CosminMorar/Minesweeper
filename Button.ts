@@ -1,49 +1,70 @@
 class Button {
     private line: number;
     private column: number;
+    private id: number;
     private state: BUTTON_STATE;
-    private value: number;
-    private neighbours: Button[];
+    private bombNeighCount: number;
+    private neighbours: number[];
 
     constructor(line: number, column: number) {
         this.line = line;
         this.column = column;
+        this.id = line * GAME_TABLE_SIZE + column;
         this.state = BUTTON_STATE.NOT_PRESSED;
-        this.value = 0;
-        this.neighbours = null;
+        this.bombNeighCount = 0;
+        this.neighbours = new Array();
     }
 
-    findNeighbours(): void {
-        const GAME_TABLE_SIZE = Number(sessionStorage.getItem('SIZE'));
-        let buttons: Button[][] = JSON.parse(sessionStorage.getItem('buttons')) as Button[][];
-        let neighbours: Button[] = new Array();
-        let delta: number[] = [-1, 0, 1];
-        delta.forEach(line_delta => {
-            delta.forEach(col_delta => {
-                let new_line = this.line + line_delta;
-                let new_col = this.column + col_delta;
-                if (0 <= new_line && new_line < GAME_TABLE_SIZE && 
-                    0 <= new_col && new_col < GAME_TABLE_SIZE && 
-                    (line_delta || col_delta)) {
-                    neighbours.push(buttons[new_line][new_col]);
-                }
-            });
-        });
-        console.log(neighbours);
-        this.neighbours = neighbours;
-        console.log(this.neighbours);
+    public addNeighbour(neighLine: number, neighCol: number, neighId: number): void {
+        this.neighbours.push(neighId);
+        if (buttons[neighLine][neighCol].getState == BUTTON_STATE.BOMB_NOT_PRESSED) {
+            ++this.bombNeighCount;
+        }
+    }
+
+    public press(): void {
+        switch (this.state) {
+            case BUTTON_STATE.BOMB_NOT_PRESSED:
+                endGame();
+            case BUTTON_STATE.PRESSED:
+                break;
+            case BUTTON_STATE.NOT_PRESSED:
+                this.state = BUTTON_STATE.PRESSED;
+                let buttonElem: HTMLInputElement = document.getElementById('button' + this.id) as HTMLInputElement;
+                buttonElem.disabled = true;
+                buttonElem.innerHTML = "" + this.bombNeighCount;
+                --emptyButtonsCount;
+                updateEmptyButtonsDisplayer();
+        }
     }
 
     get getLine(): number {
-        return 312;
+        return this.line;
     }
 
-    get getNeighbours(): Button[] {
+    get getColumn(): number {
+        return this.column;
+    }
+
+    get getState(): BUTTON_STATE {
+        return this.state;
+    }
+
+    set setState(state: BUTTON_STATE) {
+        this.state = state;
+    }
+
+    get getBombNeighCount(): number {
+        return this.bombNeighCount;
+    }
+
+    get getNeighbours(): number[] {
         return this.neighbours;
     }
 }
 
 enum BUTTON_STATE {
     PRESSED,
-    NOT_PRESSED
+    NOT_PRESSED,
+    BOMB_NOT_PRESSED 
 }
