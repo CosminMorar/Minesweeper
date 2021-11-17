@@ -1,14 +1,10 @@
 class Button {
-    private line: number;
-    private column: number;
     private id: number;
     private state: BUTTON_STATE;
     private bombNeighCount: number;
     private neighbours: number[];
 
     constructor(line: number, column: number) {
-        this.line = line;
-        this.column = column;
         this.id = line * GAME_TABLE_SIZE + column;
         this.state = BUTTON_STATE.NOT_PRESSED;
         this.bombNeighCount = 0;
@@ -36,14 +32,6 @@ class Button {
                 --emptyButtonsCount;
                 updateEmptyButtonsDisplayer();
         }
-    }
-
-    get getLine(): number {
-        return this.line;
-    }
-
-    get getColumn(): number {
-        return this.column;
     }
 
     get getState(): BUTTON_STATE {
