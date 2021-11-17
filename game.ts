@@ -3,7 +3,6 @@ const BOMB_COUNT = Number(sessionStorage.getItem('BOMB_COUNT'));
 
 let emptyButtonsCount: number;
 let buttons: Button[][];
-let gameTable: HTMLElement;
 
 function setup(): void {
     emptyButtonsCount = GAME_TABLE_SIZE * GAME_TABLE_SIZE - BOMB_COUNT;
@@ -13,7 +12,7 @@ function setup(): void {
 }
 
 function initializeGameTable(): void {
-    gameTable = document.getElementById('gameTable');
+    let gameTable = document.getElementById('gameTable');
     for (let line: number = 0; line < GAME_TABLE_SIZE; ++line) {
         let rowOfButtons: string = "<tr>";
         for (let col: number = 0; col < GAME_TABLE_SIZE; ++col) {
